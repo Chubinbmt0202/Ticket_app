@@ -11,3 +11,6 @@ const APP_COLORS = {
 
 export default APP_COLORS;
 
+//primary: "#E4883B",
+// primary: "#6a5acd",
+// primary: "#228b22",

@@ -79,7 +79,14 @@ const HomeScreen = () => {
               <Feather name="map-pin" size={20} color={APP_COLORS.primary} />
             </View>
             <View style={styles.locationTextContainer}>
-              <TouchableOpacity style={styles.locationTextContainer}>
+              <TouchableOpacity
+                style={styles.locationTextContainer}
+                onPress={() =>
+                  navigation.navigate("ChooseLocation", {
+                    type: "origin",
+                  })
+                }
+              >
                 <Text style={{ color: APP_COLORS.lightGray }}>Nơi đi</Text>
                 <Text
                   style={{
@@ -93,7 +100,12 @@ const HomeScreen = () => {
               <View
                 style={{ height: 1, backgroundColor: APP_COLORS.lightGray }}
               />
-              <TouchableOpacity style={styles.locationTextContainer}>
+              <TouchableOpacity
+                style={styles.locationTextContainer}
+                onPress={() =>
+                  navigation.navigate("ChooseLocation", { type: "destination" })
+                }
+              >
                 <Text style={{ color: APP_COLORS.lightGray }}>Nơi đến</Text>
                 <Text
                   style={{
@@ -128,7 +140,10 @@ const HomeScreen = () => {
               </TouchableOpacity>
             </View>
             <View style={styles.centerContainer}>
-              <TouchableOpacity style={styles.calendarButton}>
+              <TouchableOpacity
+                style={styles.calendarButton}
+                onPress={() => navigation.navigate("ChooseDate")}
+              >
                 <AntDesign name="calendar" size={24} color={APP_COLORS.white} />
               </TouchableOpacity>
             </View>

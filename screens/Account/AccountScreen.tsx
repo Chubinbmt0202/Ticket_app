@@ -13,6 +13,13 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import tinycolor from "tinycolor2";
+import ContactBottomSheet from "./components/ContactBottomSheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import Modal from "../../components/common/Modal";
+
 const HEADER_HEIGHT = 180;
 
 type MenuItemProps = {
@@ -44,13 +51,31 @@ const MenuItem = ({ icon, title, borderRadius, onPress }: MenuItemProps) => (
       {icon}
       <Text style={styles.menuItemText}>{title}</Text>
     </View>
-    <Ionicons name="chevron-forward" size={24} color="black" />
+    {title !== "Đăng xuất" && (
+      <Ionicons name="chevron-forward" size={24} color="black" />
+    )}
   </TouchableOpacity>
 );
 
 const AccountScreen = () => {
   const navigation = useNavigation<navigation<"AccountStack">>();
-  const [isLogin, setIsLogin] = React.useState(false);
+
+  const [isLogin, setIsLogin] = React.useState(true);
+
+  const [isLogoutModalVisible, setIsLogoutModalVisible] = React.useState(false);
+
+  const handleOpenLogoutModal = () => {
+    setIsLogoutModalVisible(true);
+  };
+
+  const handleCloseLogoutModal = () => {
+    setIsLogoutModalVisible(false);
+  };
+
+  const handleLogout = () => {
+    setIsLogoutModalVisible(false);
+    setIsLogin(false);
+  };
 
   const menuItems = [
     {
@@ -91,13 +116,27 @@ const AccountScreen = () => {
         navigation.navigate("AccountStack", { screen: "GarageOffice" }),
     },
     {
-      icon: <AntDesign name="setting" size={24} color={APP_COLORS.primary} />,
-      title: "Cài đặt",
+      icon: (
+        <MaterialCommunityIcons
+          name="ticket-percent-outline"
+          size={24}
+          color={APP_COLORS.primary}
+        />
+      ),
+      title: "Ưu đãi",
       borderRadius: { topLeft: 16, topRight: 16 },
       onPress: () =>
-        navigation.navigate("WebViewScreen", {
-          url: "https://xetuantrung.com",
-          title: "Cài đặt",
+        navigation.navigate("AccountStack", {
+          screen: "Coupon",
+        }),
+    },
+    {
+      icon: <AntDesign name="setting" size={24} color={APP_COLORS.primary} />,
+      title: "Cài đặt",
+      borderRadius: { topLeft: isLogin ? 0 : 16, topRight: isLogin ? 0 : 16 },
+      onPress: () =>
+        navigation.navigate("AccountStack", {
+          screen: "Setting",
         }),
     },
     {
@@ -120,16 +159,35 @@ const AccountScreen = () => {
         />
       ),
       title: "Góp ý",
-      borderRadius: { bottomLeft: 16, bottomRight: 16 },
+      borderRadius: {
+        bottomLeft: isLogin ? 0 : 16,
+        bottomRight: isLogin ? 0 : 16,
+      },
       onPress: () =>
-        navigation.navigate("WebViewScreen", {
-          url: "https://xetuantrung.com",
-          title: "Góp ý",
+        navigation.navigate("AccountStack", {
+          screen: "Feedback",
         }),
     },
+    {
+      icon: (
+        <MaterialIcons name="logout" size={24} color={APP_COLORS.primary} />
+      ),
+      title: "Đăng xuất",
+      borderRadius: { bottomLeft: 16, bottomRight: 16 },
+      onPress: handleOpenLogoutModal,
+    },
   ];
+  const contactBottomSheetRef = React.useRef<BottomSheetModal>(null);
+
+  const handleOpenContactBottomSheet = () => {
+    contactBottomSheetRef.current?.present();
+  };
+  const handleCloseContactBottomSheet = () => {
+    contactBottomSheetRef.current?.dismiss();
+  };
   return (
     <View style={styles.container}>
+      {/* Header */}
       <View
         style={{
           height: HEADER_HEIGHT,
@@ -150,7 +208,13 @@ const AccountScreen = () => {
           }}
         >
           {!isLogin && (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("LoginStack", {
+                  screen: "EnterPhoneNumber",
+                })
+              }
+            >
               <Text
                 style={{
                   fontWeight: "bold",
@@ -175,6 +239,34 @@ const AccountScreen = () => {
               </Text>
             </TouchableOpacity>
           )}
+          {isLogin && (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("AccountStack", {
+                  screen: "EditProfile",
+                })
+              }
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  color: APP_COLORS.white,
+                }}
+              >
+                Admin <Feather name="edit" size={20} color={APP_COLORS.white} />
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: APP_COLORS.white,
+                }}
+              >
+                0909090909
+              </Text>
+            </TouchableOpacity>
+          )}
           <View
             style={{
               width: 80,
@@ -193,12 +285,18 @@ const AccountScreen = () => {
           </View>
         </View>
       </View>
-      <View style={styles.content}>
-        <ScrollView
-          style={styles.scrollView}
-          showsVerticalScrollIndicator={false}
-        >
-          {menuItems.map((item, index) => (
+      {/* Menu items */}
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
+        {menuItems
+          .filter(
+            (item) =>
+              (isLogin ? true : !item.title.includes("Đăng xuất")) &&
+              (isLogin ? true : !item.title.includes("Ưu đãi"))
+          )
+          .map((item, index) => (
             <React.Fragment key={item.title}>
               <MenuItem
                 icon={item.icon}
@@ -206,14 +304,106 @@ const AccountScreen = () => {
                 borderRadius={item.borderRadius}
                 onPress={item.onPress}
               />
-              {!item.standalone && index < menuItems.length - 1 && (
-                <View style={styles.divider} />
-              )}
+              {!item.standalone &&
+                index <
+                  menuItems.filter(
+                    (item) =>
+                      (isLogin ? true : !item.title.includes("Đăng xuất")) &&
+                      (isLogin ? true : !item.title.includes("Ưu đãi"))
+                  ).length -
+                    1 && <View style={styles.divider} />}
               {item.standalone && <View style={styles.spacing} />}
             </React.Fragment>
           ))}
-        </ScrollView>
-      </View>
+
+        <View style={styles.contactInfo}>
+          <Text style={styles.contactTitle}>Xe khách Tuấn Trung</Text>
+          <Text style={styles.contactTitle}>Hệ thống văn phòng</Text>
+          <View>
+            <Text style={styles.contactTitle}>Thông tin liên hệ</Text>
+            <View style={styles.contactItem}>
+              <View style={styles.contactItemContent}>
+                <View>
+                  <MaterialIcons
+                    name="local-phone"
+                    size={18}
+                    color={tinycolor(APP_COLORS.lightGray)
+                      .darken(10)
+                      .toHexString()}
+                  />
+                </View>
+                <Text style={styles.contactText}>
+                  Tổng đài đặt vé: 0909090909
+                </Text>
+              </View>
+
+              <View style={styles.contactItemContent}>
+                <View>
+                  <MaterialIcons
+                    name="email"
+                    size={18}
+                    color={tinycolor(APP_COLORS.lightGray)
+                      .darken(10)
+                      .toHexString()}
+                  />
+                </View>
+                <Text style={styles.contactText}>Email: admin@gmail.com</Text>
+              </View>
+              <View style={styles.contactItemContent}>
+                <View>
+                  <AntDesign
+                    name="earth"
+                    size={18}
+                    color={tinycolor(APP_COLORS.lightGray)
+                      .darken(10)
+                      .toHexString()}
+                  />
+                </View>
+                <Text style={styles.contactText}>
+                  Website: https://xetuantrung.com
+                </Text>
+              </View>
+              <View style={styles.contactItemContent}>
+                <View>
+                  <AntDesign
+                    name="facebook-square"
+                    size={18}
+                    color={tinycolor(APP_COLORS.lightGray)
+                      .darken(10)
+                      .toHexString()}
+                  />
+                </View>
+                <Text style={styles.contactText}>
+                  Facebook: https://xetuantrung.com
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View style={styles.contactButtonContainer}>
+          <TouchableOpacity
+            style={styles.contactButton}
+            onPress={handleOpenContactBottomSheet}
+          >
+            <Text style={styles.contactButtonText}>Liên hệ</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
+      {/* Contact bottom sheet */}
+      <ContactBottomSheet
+        ref={contactBottomSheetRef}
+        onClose={handleCloseContactBottomSheet}
+      />
+
+      {/*logout Modal */}
+      <Modal
+        visible={isLogoutModalVisible}
+        onClose={handleCloseLogoutModal}
+        title="Đăng xuất"
+        subTitle="Bạn có chắc chắn muốn đăng xuất không?"
+        onPress={handleLogout}
+      />
     </View>
   );
 };
@@ -223,17 +413,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: APP_COLORS.white,
   },
-  content: {
-    flex: 1,
+
+  scrollView: {
     backgroundColor: APP_COLORS.white,
-    marginTop: -40,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
-  },
-  scrollView: {
+    marginTop: -40,
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 24,
+    zIndex: 999,
   },
   menuItem: {
     flexDirection: "row",
@@ -257,6 +446,36 @@ const styles = StyleSheet.create({
   },
   spacing: {
     height: 16,
+  },
+  contactInfo: {
+    padding: 16,
+  },
+  contactItemContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    marginLeft: 12,
+  },
+  contactItem: {
+    gap: 4,
+  },
+  contactTitle: {
+    fontSize: 18,
+    marginBottom: 12,
+  },
+  contactButton: {
+    // padding: 8,
+  },
+  contactButtonText: {
+    fontSize: 16,
+    color: APP_COLORS.primary,
+    textAlign: "center",
+  },
+  contactText: {
+    color: tinycolor(APP_COLORS.lightGray).darken(10).toHexString(),
+  },
+  contactButtonContainer: {
+    paddingBottom: 200,
   },
 });
 

@@ -5,7 +5,9 @@ export type RootStackParamList = {
   RootTab: undefined;
   Notification: undefined;
   TicketStack: undefined;
-  BookingStack: undefined;
+  BookingStack: {
+    screen?: string;
+  };
   FindTrip: undefined;
   Home: undefined;
   TicketInfo: undefined;
@@ -24,6 +26,17 @@ export type RootStackParamList = {
   AccountStack: {
     screen?: string;
   };
+  LoginStack: {
+    screen?: string;
+  };
+  EnterPhoneNumber: undefined;
+  VerifyOTP: undefined;
+  EditProfile: undefined;
+  Coupon: undefined;
+  ChooseLocation: {
+    type: "origin" | "destination";
+  };
+  SelectSeat: undefined;
 };
 
 export type RootStackProps<T extends keyof RootStackParamList> = {

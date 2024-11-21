@@ -15,6 +15,7 @@ const Header = ({ title }: HeaderProps) => {
     <View>
       <View style={styles.header}>
         <TouchableOpacity
+          hitSlop={20}
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >

@@ -9,6 +9,7 @@ import {
 import React from "react";
 import APP_COLORS from "../../constants/color";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 const HEADER_HEIGHT = 100;
 
 const NotificationScreen = () => {
@@ -23,18 +24,20 @@ const NotificationScreen = () => {
         </View>
       </View>
       <View style={styles.content}>
-        <View style={styles.searchContainer}>
-          <View style={styles.searchInputContainer}>
-            <Ionicons
-              name="search"
-              size={24}
-              color="black"
-              style={styles.searchIcon}
-            />
+        <View style={styles.inputContainer}>
+          <View style={styles.input}>
+            <View style={styles.inputIcon}>
+              <AntDesign
+                name="search1"
+                size={24}
+                color={APP_COLORS.lightGray}
+              />
+            </View>
             <TextInput
+              cursorColor={APP_COLORS.primary}
               placeholder="Nhập từ khoá"
               placeholderTextColor={APP_COLORS.lightGray}
-              style={styles.searchInput}
+              style={styles.inputText}
             />
           </View>
         </View>
@@ -88,6 +91,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 32,
   },
+  inputText: {
+    flex: 1,
+    width: "100%",
+    fontSize: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 40,
+  },
   content: {
     marginTop: -20,
     zIndex: 2,
@@ -96,35 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: APP_COLORS.white,
     flex: 1,
   },
-  searchContainer: {
-    marginHorizontal: 16,
-    borderRadius: 16,
-    marginTop: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 8,
-    paddingHorizontal: 8,
-  },
-  searchInputContainer: {
-    flex: 1,
-    flexDirection: "row",
-  },
-  searchIcon: {
-    position: "absolute",
-    left: 8,
-    top: 8,
-  },
-  searchInput: {
-    borderColor: APP_COLORS.lightGray,
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    flex: 1,
-    paddingLeft: 40,
-    fontSize: 16,
-    height: 40,
-  },
+
   emptyStateContainer: {
     flex: 1,
     alignItems: "center",
@@ -146,6 +129,26 @@ const styles = StyleSheet.create({
   updateText: {
     color: APP_COLORS.primary,
     fontSize: 16,
+  },
+  inputContainer: {
+    marginTop: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    height: 40,
+    flex: 1,
+  },
+  inputIcon: {
+    padding: 4,
   },
 });
 

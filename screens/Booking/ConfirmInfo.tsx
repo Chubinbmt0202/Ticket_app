@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const FilterScreen = () => {
+const ConfirmInfo = () => {
   return (
     <View>
-      <Text>FilterScreen</Text>
+      <Text>ConfirmInfo</Text>
     </View>
   );
 };
 
-export default FilterScreen;
+export default ConfirmInfo;
 
 const styles = StyleSheet.create({});

@@ -131,6 +131,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: APP_COLORS.white,
+    textShadowColor: "rgba(0, 0, 0, 0.75)",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 1,
   },
   closeButton: {
     position: "absolute",

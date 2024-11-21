@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const FilterScreen = () => {
+const PaymentOption = () => {
   return (
     <View>
-      <Text>FilterScreen</Text>
+      <Text>PaymentOption</Text>
     </View>
   );
 };
 
-export default FilterScreen;
+export default PaymentOption;
 
 const styles = StyleSheet.create({});

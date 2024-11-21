@@ -1,7 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import APP_COLORS from "../../../constants/color";
 import tinycolor from "tinycolor2";
+import { useNavigation } from "@react-navigation/native";
+import { navigation } from "../../../types/stackParamList";
 
 const TICKET_NOTCH_SIZE = {
   width: 16,
@@ -27,8 +29,13 @@ const TicketNotch = ({ style }: { style: any }) => (
 );
 
 const TripResultCard = () => {
+  const navigation = useNavigation<navigation<"BookingStack">>();
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigation.navigate("SelectSeat")}
+    >
       {/* Header Section */}
       <View style={styles.header}>
         <View style={styles.busTypeContainer}>
@@ -74,7 +81,7 @@ const TripResultCard = () => {
       {/* Ticket Notches */}
       <TicketNotch style={styles.leftNotch} />
       <TicketNotch style={styles.rightNotch} />
-    </View>
+    </TouchableOpacity>
   );
 };
 
