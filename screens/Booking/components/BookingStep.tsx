@@ -22,11 +22,11 @@ const BookingStep = ({ currentStep }: BookingStepProps) => {
     alignItems: "center",
     borderWidth: 1,
     borderColor: APP_COLORS.primary,
-    backgroundColor: step === currentStep ? APP_COLORS.primary : "transparent",
+    backgroundColor: step <= currentStep ? APP_COLORS.primary : "transparent",
   });
 
   const iconColor = (step: number): string =>
-    step === currentStep ? APP_COLORS.white : APP_COLORS.primary;
+    step <= currentStep ? APP_COLORS.white : APP_COLORS.primary;
 
   return (
     <View style={styles.container}>

@@ -1,11 +1,18 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import tinycolor from "tinycolor2";
 import APP_COLORS from "../../../constants/color";
+import { useNavigation } from "@react-navigation/native";
+import { navigation } from "../../../types/stackParamList";
 
 const CancelTicket = () => {
+  const navigation = useNavigation<navigation<"TicketInfo">>();
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigation.navigate("TicketInfo")}
+    >
       <View style={styles.contentContainer}>
         <View style={styles.leftSection}>
           <View>
@@ -42,7 +49,7 @@ const CancelTicket = () => {
       <View style={styles.cancelContainer}>
         <Text style={styles.cancelText}>Đã huỷ</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

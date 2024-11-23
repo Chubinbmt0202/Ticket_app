@@ -3,10 +3,16 @@ import React from "react";
 import tinycolor from "tinycolor2";
 import APP_COLORS from "../../../constants/color";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useNavigation } from "@react-navigation/native";
+import { navigation } from "../../../types/stackParamList";
 
 const CancelTicket = () => {
+  const navigation = useNavigation<navigation<"TicketInfo">>();
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigation.navigate("TicketInfo")}
+    >
       <View style={styles.upperContainer}>
         <View style={styles.leftSection}>
           <View>
@@ -46,7 +52,7 @@ const CancelTicket = () => {
           </View>
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

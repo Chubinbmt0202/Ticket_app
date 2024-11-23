@@ -37,6 +37,15 @@ export type RootStackParamList = {
     type: "origin" | "destination";
   };
   SelectSeat: undefined;
+  Filter: undefined;
+  PickUpDropOffFilter: {
+    type: "pickup" | "dropoff";
+  };
+  ChoosePickUpDropOff: undefined;
+  BookingInfomation: undefined;
+  PaymentMethod: undefined;
+  Payment: undefined;
+  VerifyPayment: undefined;
 };
 
 export type RootStackProps<T extends keyof RootStackParamList> = {

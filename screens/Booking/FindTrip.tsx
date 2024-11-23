@@ -165,7 +165,7 @@ const FindTrip = () => {
               <Entypo name="chevron-right" size={24} color={APP_COLORS.white} />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Filter")}>
             <Ionicons name="options" size={24} color={APP_COLORS.white} />
           </TouchableOpacity>
         </View>

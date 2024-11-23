@@ -14,12 +14,15 @@ import SeatItem from "./components/SeatItem";
 import TripOverviewHeader from "./components/TripOverviewHeader";
 import TripOverviewBottomSheet from "./components/TripOverviewBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useNavigation } from "@react-navigation/native";
+import { navigation } from "../../types/stackParamList";
 
 const NUM_SEAT_FLOOR_1 = 10;
 
 const NUM_SEAT_FLOOR_2 = 12;
 
 const SelectSeats = () => {
+  const navigation = useNavigation<navigation<"BookingStack">>();
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const tripOverviewBottomSheetRef = useRef<BottomSheetModal>(null);
 
@@ -38,7 +41,6 @@ const SelectSeats = () => {
   return (
     <View style={styles.container}>
       <Header title="Chọn Ghế " />
-
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <BookingStep currentStep={1} />
@@ -108,7 +110,10 @@ const SelectSeats = () => {
               {selectedSeats.length * 350000} đ
             </Text>
           </View>
-          <TouchableOpacity style={styles.footerButton}>
+          <TouchableOpacity
+            style={styles.footerButton}
+            onPress={() => navigation.navigate("ChoosePickUpDropOff")}
+          >
             <Text style={styles.footerButtonText}>Tiếp tục</Text>
           </TouchableOpacity>
         </View>

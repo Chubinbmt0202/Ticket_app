@@ -11,7 +11,7 @@ import { Dimensions } from "react-native";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 
-let ROW_SEAT = 2; // 2 or 3
+let ROW_SEAT = 3; // 2 or 3
 
 const WIDTH_ITEM =
   ROW_SEAT === 2
