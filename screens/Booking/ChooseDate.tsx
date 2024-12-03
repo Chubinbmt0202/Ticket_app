@@ -11,8 +11,8 @@ import APP_COLORS from "../../constants/color";
 import { CalendarList } from "react-native-calendars";
 import { LocaleConfig } from "react-native-calendars";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useNavigation } from "@react-navigation/native";
-import { navigation } from "../../types/stackParamList";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { navigation, RootStackParamList } from "../../types/stackParamList";
 import dayjs from "dayjs";
 LocaleConfig.locales["vi"] = {
   monthNames: [
@@ -51,6 +51,9 @@ LocaleConfig.defaultLocale = "vi";
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 const ChooseDate = () => {
   const navigation = useNavigation<navigation<"ChooseDate">>();
+  const {
+    params: { type },
+  } = useRoute<RouteProp<RootStackParamList, "ChooseDate">>();
 
   return (
     <View style={styles.container}>
@@ -61,7 +64,9 @@ const ChooseDate = () => {
         style={styles.backgroundImage}
       />
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Chọn ngày khởi hành thôi</Text>
+        <Text style={styles.headerText}>
+          Chọn ngày {type === "oneway" ? "khởi hành" : "về"} thôi
+        </Text>
       </View>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
@@ -87,7 +92,10 @@ const ChooseDate = () => {
             dayTextColor: APP_COLORS.black,
             textDisabledColor: APP_COLORS.lightGray,
           }}
-          onDayPress={(day) => {}}
+          onDayPress={(day) => {
+            console.log(day);
+            navigation.goBack();
+          }}
           markedDates={{}}
           pastScrollRange={6}
           futureScrollRange={6}

@@ -12,7 +12,9 @@ export type RootStackParamList = {
   Home: undefined;
   TicketInfo: undefined;
   News: undefined;
-  ChooseDate: undefined;
+  ChooseDate: {
+    type: "oneway" | "roundtrip";
+  };
   Ticket: undefined;
   Account: undefined;
   WebViewScreen: {

@@ -17,12 +17,15 @@ import RecentlySearchCard from "./components/RecentlySearchCard";
 import NewCard from "./components/NewCard";
 import { useNavigation } from "@react-navigation/native";
 import { navigation } from "../../types/stackParamList";
+import tinycolor from "tinycolor2";
 const HomeImg = require("../../assets/app_img/home_img.jpg");
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const HomeScreen = () => {
   const scrollViewRef = React.createRef<ScrollView>();
+
+  const [isOneWay, setIsOneWay] = React.useState(true);
 
   const scrollY = React.useRef(new Animated.Value(0));
 
@@ -132,23 +135,70 @@ const HomeScreen = () => {
           <View style={styles.datePickerContainer}>
             <View style={styles.datePickerTextContainer}>
               <TouchableOpacity
-                onPress={() => navigation.navigate("ChooseDate")}
+                onPress={() =>
+                  navigation.navigate("ChooseDate", { type: "oneway" })
+                }
                 style={styles.datePickerButton}
               >
                 <Text style={styles.lightGrayText}>Ngày khởi hành</Text>
-                <Text style={styles.dateText}>Chủ Nhật, 17/11/2024</Text>
+                <Text style={styles.dateText}>17/11/2024</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.centerContainer}>
               <TouchableOpacity
-                style={styles.calendarButton}
-                onPress={() => navigation.navigate("ChooseDate")}
+                onPress={() => setIsOneWay(true)}
+                style={{
+                  backgroundColor: isOneWay
+                    ? tinycolor(APP_COLORS.primary).setAlpha(0.3).toRgbString()
+                    : APP_COLORS.gray,
+                  ...styles.oneWayButton,
+                }}
               >
-                <AntDesign name="calendar" size={24} color={APP_COLORS.white} />
+                <Text
+                  style={{
+                    color: isOneWay ? APP_COLORS.primary : APP_COLORS.black,
+                    fontSize: 12,
+                  }}
+                >
+                  Một chiều
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setIsOneWay(false)}
+                style={{
+                  ...styles.roundTripButton,
+                  backgroundColor: !isOneWay
+                    ? tinycolor(APP_COLORS.primary).setAlpha(0.3).toRgbString()
+                    : APP_COLORS.gray,
+                }}
+              >
+                <Text
+                  style={{
+                    color: !isOneWay ? APP_COLORS.primary : APP_COLORS.black,
+                    fontSize: 12,
+                  }}
+                >
+                  Khứ hồi
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
 
+          {!isOneWay && (
+            <View style={styles.datePickerContainer}>
+              <View style={styles.datePickerTextContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("ChooseDate", { type: "roundtrip" })
+                  }
+                  style={styles.datePickerButton}
+                >
+                  <Text style={styles.lightGrayText}>Ngày về</Text>
+                  <Text style={styles.dateText}>17/11/2024</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
           <TouchableOpacity
             onPress={() => navigation.navigate("BookingStack")}
             style={styles.searchButton}
@@ -298,12 +348,11 @@ const styles = StyleSheet.create({
     elevation: 8,
     borderRadius: 10,
     marginTop: 16,
-    paddingHorizontal: 16,
   },
   datePickerTextContainer: {
     flex: 1,
     justifyContent: "center",
-    marginLeft: 36,
+    marginLeft: 16,
   },
   datePickerButton: {
     flex: 1,
@@ -318,6 +367,26 @@ const styles = StyleSheet.create({
   },
   centerContainer: {
     justifyContent: "center",
+    gap: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  oneWayButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+    width: 64,
+  },
+  roundTripButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+    width: 64,
   },
   calendarButton: {
     justifyContent: "center",
