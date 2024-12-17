@@ -10,13 +10,25 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { navigation } from "../../types/stackParamList";
+
 export default function EnterPhoneNumberScreen() {
   const navigation = useNavigation<navigation<"LoginStack">>();
 
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [generateOTP, setGenerateOTP] = useState("");
 
   const handleContinue = () => {
-    navigation.navigate("VerifyOTP");
+    console.log(phoneNumber);
+    if (!phoneNumber) {
+      alert("Lỗi nhập số điện thoại");
+      return;
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    setGenerateOTP(otp);
+
+    alert(`Mã OTP đã được gửi: ${otp}`);
+    navigation.navigate("VerifyOTP", { otpReceive: otp, phoneNumber: phoneNumber });
   };
   return (
     <View style={styles.container}>
@@ -37,7 +49,9 @@ export default function EnterPhoneNumberScreen() {
           <TextInput
             style={styles.input}
             placeholder="Nhập số điện thoại"
+            value={phoneNumber}
             placeholderTextColor={APP_COLORS.lightGray}
+            onChangeText={setPhoneNumber}
           />
         </View>
         <View style={styles.buttonContainer}>

@@ -16,7 +16,6 @@ export type RootStackParamList = {
     type: "oneway" | "roundtrip";
   };
   Ticket: undefined;
-  Account: undefined;
   WebViewScreen: {
     url: string;
     title: string;
@@ -31,8 +30,9 @@ export type RootStackParamList = {
   LoginStack: {
     screen?: string;
   };
-  EnterPhoneNumber: undefined;
-  VerifyOTP: undefined;
+  EnterPhoneNumber: { phoneNumber: string };
+  VerifyOTP: { otpReceive: string, phoneNumber: string};
+  Account: {phoneNumber: string};
   EditProfile: undefined;
   Coupon: undefined;
   ChooseLocation: {

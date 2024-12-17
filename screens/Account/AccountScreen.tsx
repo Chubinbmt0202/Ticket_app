@@ -7,17 +7,19 @@ import {
 } from "react-native";
 import React from "react";
 import APP_COLORS from "../../constants/color";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import { navigation } from "../../types/stackParamList";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
+import { useRoute } from "@react-navigation/native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import tinycolor from "tinycolor2";
 import ContactBottomSheet from "./components/ContactBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useEffect } from "react";
 import Modal from "../../components/common/Modal";
 
 const HEADER_HEIGHT = 180;
@@ -59,8 +61,18 @@ const MenuItem = ({ icon, title, borderRadius, onPress }: MenuItemProps) => (
 
 const AccountScreen = () => {
   const navigation = useNavigation<navigation<"AccountStack">>();
+  const route = useRoute<RouteProp<{ params: { phoneNumber: string } }>>();
+  const phoneNumber = route.params
+  console.log("account", phoneNumber)
+  const [account, setAccount] = React.useState({ phoneNumber: "" });
+  const [isLogin, setIsLogin] = React.useState(false);
 
-  const [isLogin, setIsLogin] = React.useState(true);
+useEffect(() => {
+    if (phoneNumber) {
+      setAccount(phoneNumber);
+      setIsLogin(true);
+    }
+  }, [phoneNumber]);
 
   const [isLogoutModalVisible, setIsLogoutModalVisible] = React.useState(false);
 
@@ -254,7 +266,7 @@ const AccountScreen = () => {
                   color: APP_COLORS.white,
                 }}
               >
-                Admin <Feather name="edit" size={20} color={APP_COLORS.white} />
+                User <Feather name="edit" size={20} color={APP_COLORS.white} />
               </Text>
 
               <Text
@@ -263,7 +275,7 @@ const AccountScreen = () => {
                   color: APP_COLORS.white,
                 }}
               >
-                0909090909
+                {account.phoneNumber}
               </Text>
             </TouchableOpacity>
           )}
@@ -480,3 +492,4 @@ const styles = StyleSheet.create({
 });
 
 export default AccountScreen;
+
