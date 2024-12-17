@@ -7,11 +7,26 @@ export type RootStackParamList = {
   TicketStack: undefined;
   BookingStack: {
     screen?: string;
+    noiDen: string;
+    noiDi: string;
+    ngayKhoiHanh: string;
   };
-  FindTrip: undefined;
-  Home: undefined;
+  FindTrip: {
+    noiDen: string;
+    noiDi: string;
+    ngayKhoiHanh: string;
+  };
+  Home: {
+    noiDen: string;
+    noiDi: string;
+
+  };
   TicketInfo: undefined;
   News: undefined;
+  ChooseLocationUser: {
+    noiDen: string;
+    noiDi: string;
+  };
   ChooseDate: {
     type: "oneway" | "roundtrip";
   };
@@ -37,6 +52,8 @@ export type RootStackParamList = {
   Coupon: undefined;
   ChooseLocation: {
     type: "origin" | "destination";
+    noiDen: string;
+    noiDi: string;
   };
   SelectSeat: undefined;
   Filter: undefined;

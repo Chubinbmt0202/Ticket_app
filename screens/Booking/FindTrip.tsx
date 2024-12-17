@@ -9,16 +9,19 @@ import {
   StyleSheet,
   ViewStyle,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import APP_COLORS from "../../constants/color";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
 import Octicons from "@expo/vector-icons/Octicons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import TripResultCard from "./components/TripResultCard";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { navigation } from "../../types/stackParamList";
+import { RootStackParamList } from "../../types/stackParamList";
+import { RouteProp } from "@react-navigation/native";
 
+type BookingScreenRouteProp = RouteProp<RootStackParamList, "BookingStack">;
 const HeaderImg = require("../../assets/app_img/home_img.jpg");
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -38,54 +41,100 @@ const INITIAL_HOURS = [
   { id: 3, time: 20, active: false },
 ];
 
-const Header = ({ scrollY, navigation, titleOpacity, titleTranslateY }) => (
-  <View>
-    <Animated.View
-      style={[
-        styles.headerNav,
-        {
-          transform: [{ translateY: titleTranslateY }],
-          opacity: titleOpacity,
-        },
-      ]}
-    >
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.backButton}
+const Header = ({
+  scrollY,
+  navigation,
+  titleOpacity,
+  titleTranslateY,
+}: {
+  scrollY: Animated.Value;
+  navigation: any;
+  titleOpacity: Animated.AnimatedInterpolation<number>;
+  titleTranslateY: Animated.AnimatedInterpolation<number>;
+}) => {
+  const route = useRoute<BookingScreenRouteProp>(); // Access the route params
+
+  // Access params from route
+  useEffect(() => {
+    if (route.params) {
+      console.log("Params received:", route.params);
+      // Example: Log each param individually (adjust according to your data structure)
+      if (route.params.noiDi) {
+        console.log("Start Location:", route.params.noiDi);
+      }
+      if (route.params.noiDen) {
+        console.log("End Location:", route.params.noiDen);
+      }
+    } else {
+      console.log("No params received");
+    }
+  }, [route.params]);
+  return (
+    <View>
+      <Animated.View
+        style={[
+          styles.headerNav,
+          {
+            transform: [{ translateY: titleTranslateY }],
+            opacity: titleOpacity,
+          },
+        ]}
       >
-        <Entypo name="chevron-left" size={24} color={APP_COLORS.primary} />
-      </TouchableOpacity>
-      <View style={styles.headerNavContent}>
-        <Text numberOfLines={2} style={styles.headerText}>
-          Hồ Chí Minh
-        </Text>
-        <AntDesign name="arrowright" size={24} color={APP_COLORS.white} />
-        <Text numberOfLines={2} style={styles.headerText}>
-          Buôn Ma Thuột
-        </Text>
-      </View>
-    </Animated.View>
-    <Animated.View
-      style={[
-        styles.overlay,
-        {
-          backgroundColor: scrollY.interpolate({
-            inputRange: [0, SCROLL_THRESHOLD.OVERLAY],
-            outputRange: ["rgba(255,255,255,0)", APP_COLORS.primary],
-            extrapolate: "clamp",
-          }),
-        },
-      ]}
-    />
-    <Image source={HeaderImg} style={styles.headerImage} />
-  </View>
-);
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Entypo name="chevron-left" size={24} color={APP_COLORS.primary} />
+        </TouchableOpacity>
+        <View style={styles.headerNavContent}>
+          <Text numberOfLines={2} style={styles.headerText}>
+            {route.params.noiDi}
+          </Text>
+          <AntDesign name="arrowright" size={24} color={APP_COLORS.white} />
+          <Text numberOfLines={2} style={styles.headerText}>
+            {route.params.noiDen}
+          </Text>
+        </View>
+      </Animated.View>
+      <Animated.View
+        style={[
+          styles.overlay,
+          {
+            backgroundColor: scrollY.interpolate({
+              inputRange: [0, SCROLL_THRESHOLD.OVERLAY],
+              outputRange: ["rgba(255,255,255,0)", APP_COLORS.primary],
+              extrapolate: "clamp",
+            }),
+          },
+        ]}
+      />
+      <Image source={HeaderImg} style={styles.headerImage} />
+    </View>
+  );
+};
 
 const FindTrip = () => {
   const scrollViewRef = React.useRef<ScrollView>(null);
   const scrollY = React.useRef(new Animated.Value(0));
   const [hour, setHour] = React.useState(INITIAL_HOURS);
+  const route = useRoute<BookingScreenRouteProp>(); // Access the route params
   const navigation = useNavigation<navigation<"BookingStack">>();
+
+  // Access params from route
+  useEffect(() => {
+    if (route.params) {
+      console.log("Params received:", route.params);
+      // Example: Log each param individually (adjust according to your data structure)
+      if (route.params.noiDi) {
+        console.log("Start Location:", route.params.noiDi);
+      }
+      if (route.params.noiDen) {
+        console.log("End Location:", route.params.noiDen);
+      }
+    } else {
+      console.log("No params received");
+    }
+  }, [route.params]);
 
   const animatedValues = useAnimatedValues(scrollY.current);
 
@@ -138,7 +187,7 @@ const FindTrip = () => {
             },
           ]}
         >
-          Hồ Chí Minh - Buôn Ma Thuột
+          {route.params.noiDi} - {route.params.noiDen}
         </Animated.Text>
       </Animated.View>
       <Animated.View
@@ -159,7 +208,7 @@ const FindTrip = () => {
             </TouchableOpacity>
             <View style={styles.dateTextContainer}>
               <Text style={styles.dateText}>Khởi hành</Text>
-              <Text style={styles.dateText}>Thứ 2, 18/11/2024</Text>
+              <Text style={styles.dateText}>{route.params.ngayKhoiHanh}</Text>
             </View>
             <TouchableOpacity>
               <Entypo name="chevron-right" size={24} color={APP_COLORS.white} />

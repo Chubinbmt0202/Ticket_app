@@ -12,6 +12,7 @@ import { CalendarList } from "react-native-calendars";
 import { LocaleConfig } from "react-native-calendars";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useTripContext } from "../../context/TripContext"; // Import context
 import { navigation, RootStackParamList } from "../../types/stackParamList";
 import dayjs from "dayjs";
 LocaleConfig.locales["vi"] = {
@@ -54,6 +55,8 @@ const ChooseDate = () => {
   const {
     params: { type },
   } = useRoute<RouteProp<RootStackParamList, "ChooseDate">>();
+    const { tripDetails, setTripDetails } = useTripContext(); // Truy cập TripContext
+  
 
   return (
     <View style={styles.container}>
@@ -94,6 +97,11 @@ const ChooseDate = () => {
           }}
           onDayPress={(day) => {
             console.log(day);
+            setTripDetails({
+              noiDi: tripDetails.noiDi,
+              noiDen: tripDetails.noiDen,
+              ngayKhoiHanh: day.dateString,
+            });
             navigation.goBack();
           }}
           markedDates={{}}

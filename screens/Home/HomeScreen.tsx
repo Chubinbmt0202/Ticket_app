@@ -8,7 +8,7 @@ import {
   Animated,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import APP_COLORS from "../../constants/color";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -18,16 +18,42 @@ import NewCard from "./components/NewCard";
 import { useNavigation } from "@react-navigation/native";
 import { navigation } from "../../types/stackParamList";
 import tinycolor from "tinycolor2";
+import { useEffect } from "react";
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { useTripContext } from "../../context/TripContext";
 const HomeImg = require("../../assets/app_img/home_img.jpg");
+
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
+type RouteParams = {
+  params: {
+    noiDen: string;
+    noiDi: string;
+  };
+};
+
 const HomeScreen = () => {
+  const { tripDetails } = useTripContext();
+  const route = useRoute<RouteProp<RouteParams, 'params'>>();
   const scrollViewRef = React.createRef<ScrollView>();
-
   const [isOneWay, setIsOneWay] = React.useState(true);
-
   const scrollY = React.useRef(new Animated.Value(0));
+  const [noiDiChoose, setNoiDi] = useState<string>('Chưa chọn');
+  const [noiDenChoose, setNoiDen] = useState<string>('Chưa chọn');
+  const [dateChoose, setDate] = useState<string>('Chưa chọn');
+
+  useEffect(() => {
+    console.log("Thông tin chuyến đi:");
+    console.log("Nơi đi:", tripDetails.noiDi);
+    console.log("Nơi đến:", tripDetails.noiDen);
+    console.log("Ngày khởi hành:", tripDetails.ngayKhoiHanh);
+
+    setNoiDi(tripDetails.noiDi);
+    setNoiDen(tripDetails.noiDen);
+    setDate(tripDetails.ngayKhoiHanh);
+
+  }, [tripDetails]);
 
   const navigation = useNavigation<navigation<"RootTab">>();
   const onScroll = Animated.event(
@@ -87,6 +113,8 @@ const HomeScreen = () => {
                 onPress={() =>
                   navigation.navigate("ChooseLocation", {
                     type: "origin",
+                    noiDi: "someLocation",
+                    noiDen: "",
                   })
                 }
               >
@@ -97,7 +125,7 @@ const HomeScreen = () => {
                     fontWeight: "900",
                   }}
                 >
-                  Buôn Ma Thuột
+                  {noiDiChoose}
                 </Text>
               </TouchableOpacity>
               <View
@@ -106,7 +134,7 @@ const HomeScreen = () => {
               <TouchableOpacity
                 style={styles.locationTextContainer}
                 onPress={() =>
-                  navigation.navigate("ChooseLocation", { type: "destination" })
+                  navigation.navigate("ChooseLocation", { type: "destination", noiDen: noiDenChoose, noiDi: noiDiChoose })
                 }
               >
                 <Text style={{ color: APP_COLORS.lightGray }}>Nơi đến</Text>
@@ -116,7 +144,7 @@ const HomeScreen = () => {
                     fontWeight: "900",
                   }}
                 >
-                  Hồ Chí Minh
+                  {noiDenChoose}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -141,7 +169,7 @@ const HomeScreen = () => {
                 style={styles.datePickerButton}
               >
                 <Text style={styles.lightGrayText}>Ngày khởi hành</Text>
-                <Text style={styles.dateText}>17/11/2024</Text>
+                <Text style={styles.dateText}>{dateChoose}</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.centerContainer}>
@@ -200,11 +228,24 @@ const HomeScreen = () => {
             </View>
           )}
           <TouchableOpacity
-            onPress={() => navigation.navigate("BookingStack")}
+            onPress={() => {
+              if (noiDiChoose && noiDenChoose && dateChoose) {
+                navigation.navigate("BookingStack", {
+                  noiDi: noiDiChoose,
+                  noiDen: noiDenChoose,
+                  ngayKhoiHanh: dateChoose,
+                });
+                console.log("Đã chuyển hướng đến màn hình tìm chuyến đi với thông tin:.", noiDiChoose, noiDenChoose, dateChoose);
+              } else {
+                // Xử lý khi thiếu thông tin, ví dụ, hiển thị thông báo lỗi
+                console.log("Vui lòng chọn đủ thông tin.");
+              }
+            }}
             style={styles.searchButton}
           >
             <Text style={styles.searchButtonText}>Tìm chuyến đi</Text>
           </TouchableOpacity>
+
 
           <View style={styles.sectionContainer}>
             <View style={styles.sectionHeader}>

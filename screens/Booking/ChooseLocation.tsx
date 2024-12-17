@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,20 +9,23 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
 import APP_COLORS from "../../constants/color";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { navigation, RootStackParamList } from "../../types/stackParamList";
+import { useTripContext } from "../../context/TripContext"; // Import context
 
 import LOCATION_DATA from "../../constants/location";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
+
 const ChooseLocationScreen = () => {
   const navigation = useNavigation<navigation<"ChooseLocation">>();
   const {
     params: { type },
   } = useRoute<RouteProp<RootStackParamList, "ChooseLocation">>();
+
+  const { tripDetails, setTripDetails } = useTripContext(); // Truy cập TripContext
 
   const [selectedProvince, setSelectedProvince] = useState<
     (typeof LOCATION_DATA)[0] | null
@@ -30,6 +34,23 @@ const ChooseLocationScreen = () => {
   const [selectedTab, setSelectedTab] = useState<"province" | "district">(
     "province"
   );
+
+  const handleProvinceSelect = (location: typeof LOCATION_DATA[0]) => {
+    setSelectedProvince(location);
+    console.log("Selected Province:", location.name);
+  };
+
+  const handleDistrictSelect = (district: string) => {
+    console.log("Selected District:", district);
+    // Cập nhật state toàn cục khi chọn quận huyện
+    setTripDetails({
+      noiDi: type === "origin" ? district : tripDetails.noiDi, // Nếu là "origin", cập nhật "nơi đi"
+      noiDen: type === "origin" ? tripDetails.noiDen : district, // Nếu là "destination", cập nhật "nơi đến"
+      ngayKhoiHanh: tripDetails.ngayKhoiHanh, // Giữ nguyên ngày khởi hành
+    });
+
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>
@@ -66,9 +87,7 @@ const ChooseLocationScreen = () => {
                 styles.tab,
                 {
                   backgroundColor:
-                    selectedTab === "province"
-                      ? APP_COLORS.white
-                      : APP_COLORS.primary,
+                    selectedTab === "province" ? APP_COLORS.white : APP_COLORS.primary,
                 },
               ]}
             >
@@ -77,9 +96,7 @@ const ChooseLocationScreen = () => {
                   styles.tabText,
                   {
                     color:
-                      selectedTab === "province"
-                        ? APP_COLORS.black
-                        : APP_COLORS.white,
+                      selectedTab === "province" ? APP_COLORS.black : APP_COLORS.white,
                   },
                 ]}
               >
@@ -92,9 +109,7 @@ const ChooseLocationScreen = () => {
                 styles.tab,
                 {
                   backgroundColor:
-                    selectedTab === "district"
-                      ? APP_COLORS.white
-                      : APP_COLORS.primary,
+                    selectedTab === "district" ? APP_COLORS.white : APP_COLORS.primary,
                 },
               ]}
             >
@@ -103,9 +118,7 @@ const ChooseLocationScreen = () => {
                   styles.tabText,
                   {
                     color:
-                      selectedTab === "district"
-                        ? APP_COLORS.black
-                        : APP_COLORS.white,
+                      selectedTab === "district" ? APP_COLORS.black : APP_COLORS.white,
                   },
                 ]}
               >
@@ -132,16 +145,13 @@ const ChooseLocationScreen = () => {
                           : APP_COLORS.white,
                     },
                   ]}
-                  onPress={() => setSelectedProvince(location)}
+                  onPress={() => handleProvinceSelect(location)}
                 >
                   <Text
                     style={[
                       styles.provinceText,
                       {
-                        fontWeight:
-                          selectedProvince?.id === location.id
-                            ? "bold"
-                            : "normal",
+                        fontWeight: selectedProvince?.id === location.id ? "bold" : "normal",
                         color:
                           selectedProvince?.id === location.id
                             ? APP_COLORS.blue
@@ -162,9 +172,7 @@ const ChooseLocationScreen = () => {
                 <TouchableOpacity
                   key={index}
                   style={styles.districtItem}
-                  onPress={() => {
-                    navigation.goBack();
-                  }}
+                  onPress={() => handleDistrictSelect(district)}
                 >
                   <Text style={styles.districtText}>{district}</Text>
                 </TouchableOpacity>

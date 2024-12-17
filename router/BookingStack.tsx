@@ -10,12 +10,24 @@ import BookingInfomation from "../screens/Booking/BookingInfomation";
 import Payment from "../screens/Booking/Payment";
 import PaymentMethod from "../screens/Booking/PaymentMethod";
 import VerifyPayment from "../screens/Booking/VerifyPayment";
+import { useRoute } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const BookingStack = () => {
+  const route = useRoute();
+  console.log("route", route.params);
+  const { noiDi, noiDen, ngayKhoiHanh } = route.params as { noiDi: string; noiDen: string; ngayKhoiHanh: string };
+
+  console.log("noiDi", noiDi, noiDen, ngayKhoiHanh);
+  
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="FindTrip" component={FindTrip} />
+      <Stack.Screen name="FindTrip" component={FindTrip} initialParams={
+        { 
+          noiDi: noiDi, 
+          noiDen: noiDen, 
+          ngayKhoiHanh: ngayKhoiHanh
+        }}/>
       <Stack.Screen name="SelectSeat" component={SelectSeats} />
       <Stack.Screen name="Filter" component={FilterScreen} />
       <Stack.Screen
