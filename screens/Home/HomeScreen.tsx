@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import APP_COLORS from "../../constants/color";
+import axios from 'axios';
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -172,61 +173,8 @@ const HomeScreen = () => {
                 <Text style={styles.dateText}>{dateChoose}</Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.centerContainer}>
-              <TouchableOpacity
-                onPress={() => setIsOneWay(true)}
-                style={{
-                  backgroundColor: isOneWay
-                    ? tinycolor(APP_COLORS.primary).setAlpha(0.3).toRgbString()
-                    : APP_COLORS.gray,
-                  ...styles.oneWayButton,
-                }}
-              >
-                <Text
-                  style={{
-                    color: isOneWay ? APP_COLORS.primary : APP_COLORS.black,
-                    fontSize: 12,
-                  }}
-                >
-                  Một chiều
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setIsOneWay(false)}
-                style={{
-                  ...styles.roundTripButton,
-                  backgroundColor: !isOneWay
-                    ? tinycolor(APP_COLORS.primary).setAlpha(0.3).toRgbString()
-                    : APP_COLORS.gray,
-                }}
-              >
-                <Text
-                  style={{
-                    color: !isOneWay ? APP_COLORS.primary : APP_COLORS.black,
-                    fontSize: 12,
-                  }}
-                >
-                  Khứ hồi
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
 
-          {!isOneWay && (
-            <View style={styles.datePickerContainer}>
-              <View style={styles.datePickerTextContainer}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("ChooseDate", { type: "roundtrip" })
-                  }
-                  style={styles.datePickerButton}
-                >
-                  <Text style={styles.lightGrayText}>Ngày về</Text>
-                  <Text style={styles.dateText}>17/11/2024</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
           <TouchableOpacity
             onPress={() => {
               if (noiDiChoose && noiDenChoose && dateChoose) {
